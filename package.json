@@ -1,0 +1,24 @@
+{
+  "name": "adana-cli",
+  "version": "0.1.0",
+  "author": "Izaak Schroeder <izaak.schroeder@gmail.com>",
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint --ignore-path .gitignore .",
+    "prepublish": "./node_modules/.bin/babel -s inline -d dist src/",
+    "test": "npm run lint"
+  },
+  "bin": {
+    "adana": "dist/adana.js"
+  },
+  "dependencies": {
+    "babel-code-frame": "^6.3.13",
+    "chalk": "^1.1.1",
+    "yargs": "^3.31.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.3.17",
+    "babel-preset-metalab": "^0.1.2",
+    "eslint": "^2.0.0-alpha-2",
+    "eslint-config-metalab": "^1.0.0-rc.1"
+  }
+}
