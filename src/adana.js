@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/* eslint no-console: 0 */
+
 import yargs from 'yargs';
 import bl from 'bl';
 import { createReadStream } from 'fs';
