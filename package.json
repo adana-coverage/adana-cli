@@ -11,8 +11,6 @@
     "adana": "dist/adana.js"
   },
   "dependencies": {
-    "babel-code-frame": "^6.3.13",
-    "chalk": "^1.1.1",
     "yargs": "^3.31.0"
   },
   "devDependencies": {

@@ -1,50 +1,56 @@
 #!/usr/bin/env node
 
 import yargs from 'yargs';
-import { readFileSync } from 'fs';
-import chalk from 'chalk';
-import frame from 'babel-code-frame';
+import bl from 'bl';
+import { createReadStream } from 'fs';
+
+function formatter(name) {
+  const module = require(`adana-format-${name}`);
+  if (module.__esModule && module.default) {
+    return module.default;
+  }
+  return module;
+}
+
+function read({ file }, cb) {
+  const stream = file === '-' ? process.stdin : createReadStream(file);
+  stream.pipe(bl((err, input) => {
+    // Bail if input fails.
+    let data;
+    if (err) {
+      cb(err);
+      return;
+    }
+    try {
+      data = JSON.parse(input.toString('utf8'));
+    } catch (err) {
+      cb(err);
+      return;
+    }
+    cb(null, data);
+  }));
+}
 
 const argv = yargs
-  .option('check', {
-    alias: 'c',
-    describe: 'output failure exit code if coverage requirements not met',
-    default: false,
-    type: 'boolean',
-  })
   .option('file', {
     alias: 'f',
     describe: 'path to coverage data file or `-` for stdin',
-    default: './coverage/coverage.json',
+    default: '-',
     type: 'string',
   })
-  .option('require', {
-    alias: 'r',
-    describe: 'minimum coverage threshold for a tag',
-    default: 70,
-    nargs: 2,
-    type: 'number',
+  .option('format', {
+    alias: 'F',
+    describe: 'name of formatter module',
+    default: 'pretty',
+    type: 'string',
   })
+  .help('help')
   .argv;
 
-const colors = {
-  ignored: chalk.dim,
-  failed: chalk.red,
-  optimal: chalk.green,
-};
-const data = JSON.parse(readFileSync(argv.file));
-const files = Object.keys(data);
-
-let failed = false;
-
-files.forEach(file => {
-  const coverage = files[file];
-  const code = readFileSync(file, 'utf8');
-
-  frame(code, loc.line, loc.column, { highlightCode: true });
+const format = formatter(argv.format);
+read(argv, (err, coverage) => {
+  if (err) {
+    throw err;
+  }
+  console.log(format(coverage, argv));
 });
-
-
-if (failed && argv.check) {
-  throw new Error('Coverage requirements not met.');
-}

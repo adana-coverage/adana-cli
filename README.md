@@ -2,12 +2,18 @@
 
 Command-line tools for [adana].
 
+## Usage
+
+Install the package:
+
 ```sh
-adana \
-  --check \
-  --file coverage/coverage.json \
-  --require line 100 \
-  --require statement 100 \
-  --require function 100 \
-  --without ignore
+npm install --save-dev adana-cli
 ```
+
+Use `adana-cli`:
+
+```sh
+adana --file coverage.json --format pretty
+```
+
+[adana]: https://www.github.com/adana-coverage/babel-plugin-transform-adana
