@@ -5,13 +5,24 @@
 import yargs from 'yargs';
 import bl from 'bl';
 import { createReadStream } from 'fs';
+import resolve from 'resolve';
 
-function formatter(name) {
-  const module = require(`adana-format-${name}`);
+function _formatter(name) {
+  const module = require(resolve.sync(name, {
+    basedir: process.cwd(),
+  }));
   if (module.__esModule && module.default) {
     return module.default;
   }
   return module;
+}
+
+function formatter(name) {
+  try {
+    return _formatter(`adana-format-${name}`);
+  } catch (err) {
+    return _formatter(name);
+  }
 }
 
 function read({ file }, cb) {
