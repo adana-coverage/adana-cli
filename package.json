@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "bl": "^1.0.1",
+    "resolve": "^1.2.0",
     "yargs": "^3.31.0"
   },
   "devDependencies": {
